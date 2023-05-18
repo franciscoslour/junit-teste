@@ -2,9 +2,13 @@ package com.luv2code.junitdemo;
 
 import org.junit.jupiter.api.*;
 
+import java.time.Duration;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DemoUtilsTest {
 
     DemoUtils demoUtils;
@@ -50,6 +54,7 @@ class DemoUtilsTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Same and not same")
     void testSameAndNotSame(){
 
@@ -61,7 +66,8 @@ class DemoUtilsTest {
     }
 
     @Test
-    @DisplayName("Tru or false")
+    @Order(2)
+    @DisplayName("True or false")
     void testTrueFlase(){
         int gradeOne = 10;
         int gradeTwo = 9;
@@ -69,6 +75,46 @@ class DemoUtilsTest {
         assertTrue(demoUtils.isGreater(gradeOne, gradeTwo), "Grade one should be greater than grade two");
         assertFalse(demoUtils.isGreater(gradeTwo, gradeOne), "Grade two should not be greater than grade one");
 
+    }
+
+
+    @Test
+    @Order(-7)
+    @DisplayName("Array Equals")
+    void testArrayEquals(){
+
+        String[] array = {"A", "B", "C"};
+        assertArrayEquals(array, demoUtils.getFirstThreeLettersOfAlphabet(), "Array should be equal");
+
+    }
+
+
+    @Test
+    @DisplayName("Iterable Equals")
+    void testIterableEquals(){
+
+        List<String> list = List.of("luv", "2", "code");
+        assertIterableEquals(list, demoUtils.getAcademyInList(), "Excepted list shoud be same list");
+
+    }
+
+    @Test
+    @DisplayName("Throws and Does Not Throw")
+    void testThrowsAdnDoesNotThrow(){
+        assertThrows(Exception.class, ()-> { demoUtils.throwException(-1); }, "Shod throw exception");
+        assertDoesNotThrow(()-> { demoUtils.throwException(9); }, "Should not throw exception");
+    }
+
+
+    @Test
+    @DisplayName("Timeout")
+    void testTimeout(){
+
+        assertTimeoutPreemptively(Duration.ofSeconds(3),
+                ()->{
+                    demoUtils.checkTimeout();
+                },
+                "Method shodld execute in 3 seconds");
     }
 
 
